@@ -13,21 +13,40 @@ DB_NAME = "instagram_clone"
 # SQLAlchemy용 URL
 DATABASE_URL = f"mysql+pymysql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}"
 
-# ✅ 데이터베이스 없으면 자동 생성
+# 데이터베이스 없으면 자동 생성
 def create_database_if_not_exists():
     connection = pymysql.connect(
         host=HOST,
         user=USER,
         password=PASSWORD,
         port=PORT,
+        charset='utf8mb4',
         autocommit=True
     )
     with connection.cursor() as cursor:
         cursor.execute(f"CREATE DATABASE IF NOT EXISTS {DB_NAME} "
-                       "CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;")
+                      "CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
     connection.close()
 
 # DB 생성 먼저 수행
+create_database_if_not_exists()
+
+# 데이터베이스 엔진 생성
+engine = create_engine(DATABASE_URL)
+
+# 세션 클래스 생성
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Base 클래스 생성
+Base = declarative_base()
+
+# 데이터베이스 세션 가져오기
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 create_database_if_not_exists()
 
 # SQLAlchemy 엔진 생성
