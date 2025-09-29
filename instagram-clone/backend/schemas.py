@@ -1,26 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
 
-# ----- Post -----
-class PostBase(BaseModel):
-    title: str
-    content: str
-
-class PostCreate(PostBase):
-    pass
-
-class PostUpdate(PostBase):
-    pass
-
-class Post(PostBase):
-    id: int
-    created_at: datetime
-    updated_at: datetime
-
-    class Config:
-        orm_mode = True
-
-
 # ----- Comment -----
 class CommentBase(BaseModel):
     content: str
@@ -33,7 +13,7 @@ class Comment(CommentBase):
     post_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True   # ✅ Pydantic v2 방식
 
 
 # ----- Like -----
@@ -42,4 +22,27 @@ class Like(BaseModel):
     post_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True   # ✅
+
+
+# ----- Post -----
+class PostBase(BaseModel):
+    title: str
+    content: str
+
+class PostCreate(PostBase):
+    pass
+
+class PostUpdate(PostBase):
+    pass
+
+# 게시물 조회 시 댓글 + 좋아요 수 포함
+class Post(PostBase):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    comments: list[Comment] = []     # ✅ 댓글 목록
+    likes_count: int = 0             # ✅ 좋아요 수
+
+    class Config:
+        from_attributes = True
