@@ -5,7 +5,7 @@ import pymysql
 
 # DB 접속 정보
 USER = "root"
-PASSWORD = "doitmysql"   # ← 본인 MySQL 비밀번호
+PASSWORD = "1234"   # ← 본인 MySQL 비밀번호
 HOST = "localhost"
 PORT = 3306
 DB_NAME = "instagram_clone"

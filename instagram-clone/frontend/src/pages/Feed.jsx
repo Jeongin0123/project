@@ -20,13 +20,17 @@ export default function Feed() {
       .finally(() => setLoading(false));
   }, []);
 
+  const handleDelete = (postId) => {
+    setPosts((prev) => prev.filter((p) => p.id !== postId));
+  };
+
   if (loading) return <p>로딩 중...</p>;
 
   return (
     <div className="space-y-6">
       {posts.length === 0 && <p>아직 게시물이 없습니다.</p>}
       {posts.map((p) => (
-        <PostCard key={p.id} post={p} />
+        <PostCard key={p.id} post={p} onDelete={handleDelete} />
       ))}
     </div>
   );

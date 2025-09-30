@@ -14,7 +14,7 @@ async function api(path, { method = "GET", body } = {}) {
   return res.json();
 }
 
-export default function PostCard({ post }) {
+export default function PostCard({ post, onDelete }) {
   const [likes, setLikes] = useState(post.likes_count || 0);
   const [comments, setComments] = useState(post.comments || []);
 
@@ -39,9 +39,39 @@ export default function PostCard({ post }) {
     }
   };
 
+  const deletePost = async () => {
+    if (!confirm("정말 이 게시글을 삭제하시겠습니까?")) return;
+    try {
+      await api(`/posts/${post.id}`, { method: "DELETE" });
+      onDelete?.(post.id);
+    } catch (e) {
+      alert("게시글 삭제 실패: " + e.message);
+    }
+  };
+
+  const deleteComment = async (commentId) => {
+    if (!confirm("이 댓글을 삭제하시겠습니까?")) return;
+    try {
+      await api(`/comments/${commentId}`, { method: "DELETE" });
+      setComments((prev) => prev.filter((c) => c.id !== commentId));
+    } catch (e) {
+      alert("댓글 삭제 실패: " + e.message);
+    }
+  };
+
   return (
     <div className="border rounded-2xl p-4 bg-white">
-      <h3 className="font-bold text-lg">{post.title}</h3>
+      {/* 게시글 제목 + 삭제 버튼 */}
+      <div className="flex justify-between items-center">
+        <h3 className="font-bold text-lg">{post.title}</h3>
+        <button
+          onClick={deletePost}
+          className="text-sm text-red-500 hover:underline"
+        >
+          삭제
+        </button>
+      </div>
+
       <p className="text-gray-700 mt-2">{post.content}</p>
 
       <div className="flex items-center gap-4 mt-4">
@@ -56,8 +86,17 @@ export default function PostCard({ post }) {
       <div className="mt-4 space-y-2">
         <p className="font-semibold">댓글</p>
         {comments.map((c) => (
-          <div key={c.id} className="text-sm border-b pb-1">
-            {c.content}
+          <div
+            key={c.id}
+            className="flex justify-between items-center text-sm border-b pb-1"
+          >
+            <span>{c.content}</span>
+            <button
+              onClick={() => deleteComment(c.id)}
+              className="text-xs text-red-500 hover:underline"
+            >
+              삭제
+            </button>
           </div>
         ))}
         <CommentBox onSubmit={addComment} />
