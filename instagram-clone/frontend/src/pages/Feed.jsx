@@ -26,7 +26,7 @@ export default function Feed() {
     <div className="space-y-6">
       {posts.length === 0 && <p>아직 게시물이 없습니다.</p>}
       {posts.map((p) => (
-        <PostCard key={p.id} post={p} />
+        <PostCard key={p.id} post={p} onDelete={(id) => setPosts(posts.filter((p) => p.id !== id))} />
       ))}
     </div>
   );

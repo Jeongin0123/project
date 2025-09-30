@@ -14,7 +14,7 @@ async function api(path, { method = "GET", body } = {}) {
   return res.json();
 }
 
-export default function PostCard({ post }) {
+export default function PostCard({ post, onDelete }) {
   const [likes, setLikes] = useState(post.likes_count || 0);
   const [comments, setComments] = useState(post.comments || []);
 
@@ -39,21 +39,47 @@ export default function PostCard({ post }) {
     }
   };
 
-  return (
-    <div className="border rounded-2xl p-4 bg-white">
-      <h3 className="font-bold text-lg">{post.title}</h3>
-      <p className="text-gray-700 mt-2">{post.content}</p>
+  const deletePost = async () => {
+    if (!window.confirm("이 게시물을 삭제할까요?")) return;
+    try {
+      await api(`/posts/${post.id}`, { method: "DELETE" });
+      onDelete?.(post.id);
+    } catch (e) {
+      alert("삭제 실패: " + e.message);
+    }
+  };
 
-      <div className="flex items-center gap-4 mt-4">
+  return (
+    <div className="bg-white rounded-2xl shadow-md p-4 space-y-3">
+      {/* 헤더: 작성자/삭제 */}
+      <div className="flex justify-between items-center">
+        <span className="font-bold text-gray-800">{post.user_name || "익명"}</span>
+        <button
+          onClick={deletePost}
+          className="text-red-500 text-sm hover:underline"
+        >
+          삭제
+        </button>
+      </div>
+
+      {/* 게시글 내용 */}
+      <div>
+        <h3 className="font-semibold text-gray-900">{post.title}</h3>
+        <p className="text-gray-700 mt-1">{post.content}</p>
+      </div>
+
+      {/* 좋아요 버튼 */}
+      <div className="flex items-center gap-4">
         <button
           onClick={addLike}
-          className="text-sm bg-indigo-500 text-white rounded-lg px-3 py-1"
+          className="text-sm bg-indigo-500 text-white rounded-lg px-3 py-1 hover:bg-indigo-600"
         >
           ❤️ {likes}
         </button>
       </div>
 
-      <div className="mt-4 space-y-2">
+      {/* 댓글 */}
+      <div className="space-y-2">
         <p className="font-semibold">댓글</p>
         {comments.map((c) => (
           <div key={c.id} className="text-sm border-b pb-1">
