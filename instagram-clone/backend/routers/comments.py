@@ -1,11 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from .. import crud, schemas, database
+from backend import crud, schemas, database
 
-router = APIRouter(
-    prefix="/comments",
-    tags=["comments"]
-)
+router = APIRouter(prefix="/comments", tags=["comments"])
 
 @router.post("/{post_id}", response_model=schemas.Comment)
 def create_comment(post_id: int, comment: schemas.CommentCreate, db: Session = Depends(database.get_db)):

@@ -5,7 +5,7 @@ import pymysql
 
 # DB 접속 정보
 USER = "root"
-PASSWORD = "1234"   # ← 본인 MySQL 비밀번호
+PASSWORD = "1234"   # ← 본인 비밀번호
 HOST = "localhost"
 PORT = 3306
 DB_NAME = "instagram_clone"
@@ -28,31 +28,15 @@ def create_database_if_not_exists():
                       "CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
     connection.close()
 
-# DB 생성 먼저 수행
 create_database_if_not_exists()
 
-# 데이터베이스 엔진 생성
-engine = create_engine(DATABASE_URL)
-
-# 세션 클래스 생성
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Base 클래스 생성
-Base = declarative_base()
-
-# 데이터베이스 세션 가져오기
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-create_database_if_not_exists()
-
-# SQLAlchemy 엔진 생성
+# SQLAlchemy 엔진
 engine = create_engine(DATABASE_URL, echo=True)
+
+# 세션
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+# Base
 Base = declarative_base()
 
 # DB 세션 종속성

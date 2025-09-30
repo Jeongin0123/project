@@ -1,11 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from .. import crud, database
+from backend import crud, database
 
-router = APIRouter(
-    prefix="/likes",
-    tags=["likes"]
-)
+router = APIRouter(prefix="/likes", tags=["likes"])
 
 @router.post("/{post_id}")
 def add_like(post_id: int, db: Session = Depends(database.get_db)):

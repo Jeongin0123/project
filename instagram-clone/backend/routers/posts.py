@@ -1,11 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from .. import crud, schemas, database
+from backend import crud, schemas, database
 
-router = APIRouter(
-    prefix="/posts",
-    tags=["posts"]
-)
+router = APIRouter(prefix="/posts", tags=["posts"])
 
 @router.post("/", response_model=schemas.Post)
 def create_post(post: schemas.PostCreate, db: Session = Depends(database.get_db)):
