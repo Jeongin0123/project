@@ -1,11 +1,13 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
+import BottomNav from "./components/BottomNav"; // 추가
 import "./App.css";
 
 export default function App() {
   const { pathname } = useLocation();
 
   return (
-    <div>
+    <div style={{ paddingBottom: "60px" }}> {/* BottomNav 높이만큼 여백 */}
+      {/* 상단 네비게이션 */}
       <nav
         style={{
           display: "flex",
@@ -44,9 +46,13 @@ export default function App() {
         </div>
       </nav>
 
+      {/* 라우트가 그려질 자리 */}
       <main style={{ padding: 24, maxWidth: 960, margin: "0 auto" }}>
         <Outlet />
       </main>
+
+      {/* 하단바 고정 */}
+      <BottomNav />
     </div>
   );
 }
