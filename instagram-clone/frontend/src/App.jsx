@@ -6,7 +6,6 @@ export default function App() {
 
   return (
     <div>
-      {/* 상단 네비게이션 */}
       <nav
         style={{
           display: "flex",
@@ -45,7 +44,6 @@ export default function App() {
         </div>
       </nav>
 
-      {/* 라우트가 그려질 자리 */}
       <main style={{ padding: 24, maxWidth: 960, margin: "0 auto" }}>
         <Outlet />
       </main>

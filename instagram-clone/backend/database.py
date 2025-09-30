@@ -5,7 +5,7 @@ import pymysql
 
 # DB 접속 정보
 USER = "root"
-PASSWORD = "doitmysql"   # ← 본인 비밀번호
+PASSWORD = "1234"   # ← 본인 MySQL 비밀번호
 HOST = "localhost"
 PORT = 3306
 DB_NAME = "instagram_clone"
@@ -30,13 +30,13 @@ def create_database_if_not_exists():
 
 create_database_if_not_exists()
 
-# SQLAlchemy 엔진
+# SQLAlchemy 엔진 생성
 engine = create_engine(DATABASE_URL, echo=True)
 
-# 세션
+# 세션 클래스
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Base
+# Base 클래스
 Base = declarative_base()
 
 # DB 세션 종속성
