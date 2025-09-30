@@ -14,7 +14,7 @@ async function api(path, { method = "GET", body } = {}) {
   return res.json();
 }
 
-export default function PostCard({ post, onDelete }) {
+export default function PostCard({ post, onDelete, isLast }) {
   const [likes, setLikes] = useState(post.likes_count || 0);
   const [comments, setComments] = useState(post.comments || []);
 
@@ -60,47 +60,54 @@ export default function PostCard({ post, onDelete }) {
   };
 
   return (
-    <div className="border rounded-2xl p-4 bg-white">
-      {/* 게시글 제목 + 삭제 버튼 */}
-      <div className="flex justify-between items-center">
-        <h3 className="font-bold text-lg">{post.title}</h3>
-        <button
-          onClick={deletePost}
-          className="text-sm text-red-500 hover:underline"
-        >
-          삭제
-        </button>
-      </div>
-
-      <p className="text-gray-700 mt-2">{post.content}</p>
-
-      <div className="flex items-center gap-4 mt-4">
-        <button
-          onClick={addLike}
-          className="text-sm bg-indigo-500 text-white rounded-lg px-3 py-1"
-        >
-          ❤️ {likes}
-        </button>
-      </div>
-
-      <div className="mt-4 space-y-2">
-        <p className="font-semibold">댓글</p>
-        {comments.map((c) => (
-          <div
-            key={c.id}
-            className="flex justify-between items-center text-sm border-b pb-1"
+    <div className="mb-6">
+      <div className="border rounded-2xl p-4 bg-white shadow-sm">
+        {/* 게시글 제목 + 삭제 버튼 */}
+        <div className="flex justify-between items-center">
+          <h3 className="font-bold text-lg">{post.title}</h3>
+          <button
+            onClick={deletePost}
+            className="text-sm text-red-500 hover:underline"
           >
-            <span>{c.content}</span>
-            <button
-              onClick={() => deleteComment(c.id)}
-              className="text-xs text-red-500 hover:underline"
+            삭제
+          </button>
+        </div>
+
+        <p className="text-gray-700 mt-2">{post.content}</p>
+
+        <div className="flex items-center gap-4 mt-4">
+          <button
+            onClick={addLike}
+            className="text-sm bg-indigo-500 text-white rounded-lg px-3 py-1"
+          >
+            ❤️ {likes}
+          </button>
+        </div>
+
+        <div className="mt-4 space-y-2">
+          <p className="font-semibold">댓글</p>
+          {comments.map((c) => (
+            <div
+              key={c.id}
+              className="flex justify-between items-center text-sm border-b pb-1"
             >
-              삭제
-            </button>
-          </div>
-        ))}
-        <CommentBox onSubmit={addComment} />
+              <span>{c.content}</span>
+              <button
+                onClick={() => deleteComment(c.id)}
+                className="text-xs text-red-500 hover:underline"
+              >
+                삭제
+              </button>
+            </div>
+          ))}
+          <CommentBox onSubmit={addComment} />
+        </div>
       </div>
+
+      {/* 게시글 구분선, 마지막 게시글이 아니면 */}
+      {!isLast && (
+        <hr className="border-gray300 border-t-2 w-full mt-6" />
+      )}
     </div>
   );
 }
